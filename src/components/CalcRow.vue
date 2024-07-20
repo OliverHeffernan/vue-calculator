@@ -7,10 +7,15 @@ export default {
     }),
     methods: {
         calculate: function () {
-            console.log(this.equation);
-            this.$refs.answer.innerHTML = calculateAnswer(splitBracketsSecond(this.equation));
+            this.$refs.equation.value = replaceSpecialCharacters(this.$refs.equation.value);
+            this.$refs.answer.innerHTML = calculateAnswer(splitBrackets(this.$refs.equation.value));
         }
     }
+}
+
+function replaceSpecialCharacters(equation) {
+    equation = equation.replaceAll("pi", "π");
+    return equation;
 }
 
 function calculateAnswer(equation) {
@@ -22,28 +27,35 @@ function calculateAnswer(equation) {
     subEquation = subEquation.replaceAll('*+-', '*-');
     subEquation = subEquation.replaceAll('/+-', '/-');
 
-    console.log(`subEquation${subEquation}`);
-    console.log(`splitBrackets${splitBracketsSecond(equation)}`);
-
     return add(subEquation);
 }
 
+function exponents(equation) {
+    if (!equation.includes("^")) return equation;
+    let expArray = equation.split("^");
+    let result = expArray[0];
+    for (let i = 1; i < expArray.length; i++) {
+        const e = expArray[i];
+        result = Math.pow(result, e);
+    }
+    return result;
+}
+
 function multiply(equation) {
+    if (!equation.includes("*")) return divide(equation);
     let multArray = equation.split("*");
     let result = 1;
     multArray.forEach(element => {
-        console.log(`element${element}`);
         result *= divide(element);
     });
-    console.log(result);
     return result;
 }
 
 function divide(equation) {
+    if (!equation.includes("/")) return exponents(equation);
     let divArray = equation.split("/");
     let result = divArray[0] * divArray[0];
     divArray.forEach(element => {
-        console.log(`element${element}`);
         result = result/element;
     });
     result = divArray.length > 1 ? result : divArray[0];
@@ -55,61 +67,25 @@ function add(equation) {
     let result = 0;
 
     addArray.forEach(element => {
-        console.log(`element${element}`);
         result += parseFloat(multiply(element));
     });
 
     return result;
 }
 
-// function splitBrackets(equation) {
-//     if (!equation.includes("(") || !equation.includes(")")) return equation;
-
-//     let depth = 0;
-//     let splitEquation = [];
-//     let openPoint = 0;
-//     for (let i = 0; i < equation.length; i++) {
-//         const element = equation[i];
-//         if (element == "(") {
-//             depth ++;
-//             if (depth == 1) {
-//                 openPoint = i;
-//             }
-//         }
-
-//         if (element == ")") {
-//             depth --;
-//             if (depth == 0) {
-//                 splitEquation.push(equation.substring(openPoint, i+1));
-//                 openPoint = i + 1;
-//             }
-//         }
-
-//         if (i == equation.length - 1) {
-//             console.log("last");
-//             splitEquation.push(equation.substring(openPoint, i+1));
-//         }
-//     }
-
-//     for (let i = 0; i < splitEquation.length; i++) {
-//         splitEquation[i];
-//         if (splitEquation[i][0] == "(") {
-//             // remove the first and last letters from the string, because they are brackets.
-//             splitEquation[i] = splitEquation[i].substring(1, splitEquation[i].length - 1);
-//         }
-        
-//         if (splitEquation[i].includes("(") && splitEquation[i].includes(")")) {
-//             splitEquation[i] = splitBrackets(splitEquation[i]);
-//         }
-//     }
-//     return splitEquation;
-// }
-
-function splitBracketsSecond(e) {
+function splitBrackets(e) {
     if (e.replace(/[^(]/g, "").length != e.replace(/[^)]/g, "").length)
     {
         return "maError: uneven brackets";
     }
+
+    // replacing pi symbol with actual pi number
+    e = e.replaceAll('π', `(${Math.PI}) `);
+
+    // remove all empty space
+    e = e.replaceAll(' ', '');
+    console.log(e);
+
     while (e.includes("(") && e.includes(")")) {
         let lastOpen;
         let firstClose;
@@ -122,10 +98,6 @@ function splitBracketsSecond(e) {
                 break;
             }
         }
-        console.log("parts");
-        console.log(e.substring(0, lastOpen));
-        console.log(e.substring(lastOpen + 1, firstClose));
-        console.log(e.substring(firstClose + 1, e.length));
 
         let firstPart = e.substring(0, lastOpen);
         let middlePart = calculateAnswer(e.substring(lastOpen + 1, firstClose));
@@ -151,7 +123,7 @@ function splitBracketsSecond(e) {
 <template>
     <tr>
         <td>
-            <input type="text" class="inputs" placeholder="|" v-model="equation" v-on:input="calculate" />
+            <input ref="equation" type="text" class="inputs" placeholder="|" v-model="equation" v-on:input="calculate" />
         </td>
         <td class="answer" ref="answer"></td>
     </tr>
