@@ -8,7 +8,7 @@ export default {
     methods: {
         calculate: function () {
             console.log(this.equation);
-            this.$refs.answer.innerHTML = calculateAnswer(this.equation);
+            this.$refs.answer.innerHTML = calculateAnswer(splitBracketsSecond(this.equation));
         }
     }
 }
@@ -106,6 +106,10 @@ function add(equation) {
 // }
 
 function splitBracketsSecond(e) {
+    if (e.replace(/[^(]/g, "").length != e.replace(/[^)]/g, "").length)
+    {
+        return "maError: uneven brackets";
+    }
     while (e.includes("(") && e.includes(")")) {
         let lastOpen;
         let firstClose;
@@ -115,6 +119,7 @@ function splitBracketsSecond(e) {
             }
             else if (e[i] == ")") {
                 firstClose = i;
+                break;
             }
         }
         console.log("parts");
@@ -122,7 +127,21 @@ function splitBracketsSecond(e) {
         console.log(e.substring(lastOpen + 1, firstClose));
         console.log(e.substring(firstClose + 1, e.length));
 
-        e = e.substring(0, lastOpen) + calculateAnswer(e.substring(lastOpen + 1, firstClose)) + e.substring(firstClose + 1, e.length);
+        let firstPart = e.substring(0, lastOpen);
+        let middlePart = calculateAnswer(e.substring(lastOpen + 1, firstClose));
+        let lastPart = e.substring(firstClose + 1, e.length);
+
+        let operator1 = firstPart[firstPart.length - 1];
+        if (!"+-/*".includes(operator1) && firstPart != "") {
+            firstPart += "*";
+        }
+
+        let operator2 = lastPart[0];
+        if (!"+-/*".includes(operator2) && lastPart != "") {
+            lastPart = "*" + lastPart;
+        }
+
+        e = firstPart + middlePart + lastPart;
     }
     return e;
 }
