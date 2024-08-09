@@ -41,11 +41,13 @@ function multiply(e) {
 }
   
 function divide(e) {
+    console.log(e);
     if (!e.includes("/")) return exponents(e);
     let divArray = e.split("/");
-    let result = divArray[0] * divArray[0];
+    let result = Math.pow(calculateAnswer(divArray[0]),2);
+    console.log(result);
     divArray.forEach((element) => {
-      result = result / element;
+      result = result / calculateAnswer(element);
     });
     result = divArray.length > 1 ? result : divArray[0];
     return result;
