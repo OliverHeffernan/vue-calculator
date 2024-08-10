@@ -6,105 +6,85 @@ export function replaceAns(e, prev) {
   if (prev == null) prev = "1";
   return e.replaceAll("ans", `(${prev})`); 
 }
-  
-export function calculateAnswer(e) {
-    // remove all white space
-    e = e.replace(/\s/g, "");
-  
-    // making sure all subtraction is replaced with '+-' but multiplying or dividing negative numbers is not affected
-    let subEquation = e.replaceAll("-", "+-");
-    subEquation = subEquation.replaceAll("*+-", "*-");
-    subEquation = subEquation.replaceAll("/+-", "/-");
-  
-    return add(subEquation);
-}
-  
-function exponents(e) {
-    if (!e.includes("^")) return e;
-    let expArray = e.split("^");
-    let result = expArray[0];
-    for (let i = 1; i < expArray.length; i++) {
-      const e = expArray[i];
-      result = Math.pow(result, e);
+
+function surroundFunction(e) {
+  let q = "";
+  let prevNumber = false;
+  let prevBracket = false;
+  for (var i = 0; i < e.length; i++) {
+    if (e[i] == "M" && prevNumber) {
+      q += "*";
     }
-    return result;
-}
-  
-function multiply(e) {
-    if (!e.includes("*")) return divide(e);
-    let multArray = e.split("*");
-    let result = 1;
-    multArray.forEach((element) => {
-      result *= divide(element);
-    });
-    return result;
-}
-  
-function divide(e) {
-    console.log(e);
-    if (!e.includes("/")) return exponents(e);
-    let divArray = e.split("/");
-    let result = Math.pow(calculateAnswer(divArray[0]),2);
-    console.log(result);
-    divArray.forEach((element) => {
-      result = result / calculateAnswer(element);
-    });
-    result = divArray.length > 1 ? result : divArray[0];
-    return result;
-}
-  
-function add(e) {
-    let addArray = e.split("+");
-    let result = 0;
-  
-    addArray.forEach((element) => {
-      result += parseFloat(multiply(element));
-    });
-  
-    return result;
-}
-  
-export function splitBrackets(e) {
-    if (e.replace(/[^(]/g, "").length != e.replace(/[^)]/g, "").length) {
-      return "maError: uneven brackets";
+
+    if (/\d/.test(e[i])) {
+      prevNumber = true;
     }
-  
-    // replacing pi symbol with actual pi number
-    e = e.replaceAll("π", `(${Math.PI}) `);
-  
-    // replacing % symbol with number
-    e = e.replaceAll("%", "/100");
-  
-    // remove all empty space
-    e = e.replaceAll(" ", "");
-  
-    while (e.includes("(") && e.includes(")")) {
-      let lastOpen;
-      let firstClose;
-      for (let i = 0; i < e.length; i++) {
-        if (e[i] == "(") {
-          lastOpen = i;
-        } else if (e[i] == ")") {
-          firstClose = i;
-          break;
-        }
-      }
-  
-      let firstPart = e.substring(0, lastOpen);
-      let middlePart = calculateAnswer(e.substring(lastOpen + 1, firstClose));
-      let lastPart = e.substring(firstClose + 1, e.length);
-  
-      let operator1 = firstPart[firstPart.length - 1];
-      if (!"+-/*^".includes(operator1) && firstPart != "") {
-        firstPart += "*";
-      }
-  
-      let operator2 = lastPart[0];
-      if (!"+-/*)^".includes(operator2) && lastPart != "") {
-        lastPart = "*" + lastPart;
-      }
-  
-      e = firstPart + middlePart + lastPart;
+    else
+    {
+      prevNumber = false;
     }
-    return e;
+
+    if (prevNumber && prevBracket) {
+      q += "*";
+    }
+
+    if (e[i] == ")") {
+      prevBracket = true;
+    }
+    else
+    {
+      prevBracket = false;
+    }
+    
+    q += e[i];
+  }
+  return q;
+}
+
+
+export function newCalculateAnswer(e) {
+  // remove all white space
+  e = e.replaceAll(/\s/g, "");
+
+  if ("+-*/^(".includes(e[e.length - 1])) {
+    return "Syntax error"
+  }
+
+  if ("+*/^)".includes(e[0])) {
+    return "Syntax error"
+  }
+
+  if (e.replace(/[^(]/g, "").length != e.replace(/[^)]/g, "").length) {
+    return "Syntax error"
+  }
+
+  let ne = e;
+
+  e = e.replaceAll("sin(", "Math.sin(");
+  ne = e.replaceAll("sin(", "");
+  e = e.replaceAll("cos(", "Math.cos(");
+  ne = ne.replaceAll("cos(", "");
+  e = e.replaceAll("cot(", "Math.cot(");
+  ne = ne.replaceAll("tan(", "");
+
+  e = e.replaceAll("log(", "Math.log10(");
+  ne = ne.replaceAll("log(", "");
+  e = e.replaceAll("ln(", "Math.log(");
+  ne = ne.replaceAll("ln(", ")");
+
+  e = e.replaceAll("pow(", "Math.pow(");
+  ne = ne.replaceAll("pow(", "");
+
+  let regex = /[a-zA-Z]/g;
+  if (regex.test(ne)) {
+    return "Syntax error, undefined"
+  }
+  console.log(e);
+
+  e = surroundFunction(e);
+
+  
+
+  console.log(e);
+  return eval(e);
 }

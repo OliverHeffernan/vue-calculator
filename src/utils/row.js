@@ -1,4 +1,4 @@
-import { replaceSpecialCharacters, replaceAns, calculateAnswer, splitBrackets } from './calculation';
+import { replaceSpecialCharacters, newCalculateAnswer, replaceAns } from './calculation';
 import rowManager from './rowManager';
 
 export class Row {
@@ -15,7 +15,8 @@ export class Row {
     
         const prevAnswer = prevRow ? prevRow.getAnswer() : 0;
         this.equation = replaceSpecialCharacters(this.equation);
-        this.answer = calculateAnswer(splitBrackets(replaceAns(this.equation, prevAnswer)));
+        //this.answer = calculateAnswer(splitBrackets(replaceAns(this.equation, prevAnswer)));
+        this.answer = newCalculateAnswer(replaceAns(this.equation, prevAnswer));
     }
 
     setEquation(e) {
