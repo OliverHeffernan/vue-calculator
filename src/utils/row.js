@@ -97,7 +97,19 @@ function displayEquation(e) {
         d = displayEquation(d);
     }
 
-    let operands = [["+", "<op> + </op>"], ["-", "<op> - </op>"], ["*", "<op> × </op>"], ["sin", "<func>sin</func>"]];
+    let operands = [
+        ["+", "<op> + </op>"],
+        ["-", "<op> - </op>"],
+        ["*", "<op> × </op>"],
+        ["sin(", "<func>sin</func>("],
+        ["cos(", "<func>cos</func>("],
+        ["tan(", "<func>tan</func>("],
+        ["log(", "<func>log</func>("],
+        ["ln(", "<func>ln</func>("],
+        ["cosec(", "<func>cosec</func>("],
+        ["sec(", "<func>sec</func>("],
+        ["csc(", "<func>csc</func>("]
+    ];
 
     for (let i = 0; i < operands.length; i++) {
         d = d.replaceAll(operands[i][0], operands[i][1]);

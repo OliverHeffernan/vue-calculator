@@ -56,11 +56,17 @@ export function newCalculateAnswer(e) {
   ne = ne.replaceAll("cos(", "");
   re = re.replaceAll("cot(", "Math.cot(");
   ne = ne.replaceAll("tan(", "");
+  re = re.replaceAll("cosec(", "MathCoSec(");
+  ne = ne.replaceAll("cosec(", "");
+  re = re.replaceAll("csc(", "MathCoSec(");
+  ne = ne.replaceAll("csc(", "");
+  re = re.replaceAll("sec(", "MathSec(");
+  ne = ne.replaceAll("sec(", "");
 
   re = re.replaceAll("log(", "Math.log10(");
   ne = ne.replaceAll("log(", "");
   re = re.replaceAll("ln(", "Math.log(");
-  ne = ne.replaceAll("ln(", ")");
+  ne = ne.replaceAll("ln(", "");
 
   re = re.replaceAll("pow(", "Math.pow(");
   ne = ne.replaceAll("pow(", "");
@@ -77,3 +83,16 @@ export function newCalculateAnswer(e) {
   console.log(re);
   return eval(re);
 }
+
+// complex trig ratios
+
+function MathSec(a) {
+  return 1/Math.cos(a);
+}
+
+function MathCoSec(a) {
+  return 1/Math.sin(a);
+}
+
+console.log(MathSec(5));
+console.log(MathCoSec(5));

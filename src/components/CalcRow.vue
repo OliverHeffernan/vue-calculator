@@ -9,6 +9,7 @@ const props = defineProps({
   }
 });
 
+var mounted = false;
 const rowInput = ref();
 
 onMounted(() => {
@@ -16,6 +17,7 @@ onMounted(() => {
   if (props.index == rowManager.focusRowIndex.value) {
     document.getElementById(`row${props.index}`).focus();
   }
+  mounted = true;
 });
 
 function handleInput() {
@@ -26,6 +28,13 @@ function handleInput() {
 function handleEnter() {
   rowManager.addRowAt(props.index);
 }
+
+function focusOnRow() {
+  if (mounted) {
+    document.getElementById(`row${props.index}`).focus();
+  }
+}
+focusOnRow();
 </script>
 
 <template>
@@ -42,7 +51,7 @@ function handleEnter() {
       />
     </td>
   </tr>
-  <tr>
+  <tr @click="focusOnRow">
     <td :id="'dispRow' + props.index" v-html="rowManager.getRow(props.index).getDispEquation()"></td>
     <td><op> = </op></td>
     <td class="answer">{{ rowManager.getRow(props.index).getAnswer() }}</td>
@@ -52,6 +61,7 @@ function handleEnter() {
 <style>
 .inputs {
   /* width: 50vw; */
+  width: 1ch;
   border: none;
   background-color: transparent;
   font-family: "Inconsolata", monospace;
@@ -59,15 +69,17 @@ function handleEnter() {
   font-weight: 500;
   font-style: normal;
   font-variation-settings: "wdth" 100;
-  font-size: 9px;
+  font-size: 0px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: rgb(142, 142, 142);
   transition: all 0.4s;
   margin-right: 50px;
+  width: auto;
 }
 
 .inputs:focus {
+  width: auto;
   font-size: 12px;
   outline: none;
   border: none;
