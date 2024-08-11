@@ -41,28 +41,60 @@ function handleEnter() {
         @keyup.enter="handleEnter"
       />
     </td>
+  </tr>
+  <tr>
+    <td :id="'dispRow' + props.index" v-html="rowManager.getRow(props.index).getDispEquation()"></td>
+    <td><op> = </op></td>
     <td class="answer">{{ rowManager.getRow(props.index).getAnswer() }}</td>
   </tr>
 </template>
 
 <style>
 .inputs {
-  width: 50vw;
+  /* width: 50vw; */
   border: none;
-  background-color: black;
-  color: white;
+  background-color: transparent;
   font-family: "Inconsolata", monospace;
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
   font-variation-settings: "wdth" 100;
-  font-size: 20px;
+  font-size: 9px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: rgb(142, 142, 142);
+  transition: all 0.4s;
+  margin-right: 50px;
 }
 
 .inputs:focus {
+  font-size: 12px;
   outline: none;
   border: none;
+  color: white;
+}
+
+brack {
+  color: red;
+}
+
+.depth0 {
+  color: orange;
+}
+
+.depth1 {
+  color: yellow;
+}
+
+.depth2 {
+  color: green;
+}
+
+op {
+  color: rgb(223, 104, 116);
+}
+
+func {
+  color: rgb(119, 157, 233);
 }
 </style>
