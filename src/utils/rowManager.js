@@ -30,8 +30,20 @@ class RowManager {
     calculateAllRows() {
         this.rows.value.forEach(row => row.calculate());
     }
+    getFocusRowIndex() { return this.focusRowIndex.value; }
+    setFocusRowIndex(index) { this.focusRowIndex.value = index; }
 }
 
 const rowManager = Object.freeze(new RowManager());
+
+function handleEvent(event) {
+    console.log("event");
+    if (event.key !== "Enter") {
+        rowManager.calculateAllRows();
+    }
+}
+
+document.addEventListener('keyup', handleEvent);
+document.addEventListener('click', handleEvent);
 
 export default rowManager;

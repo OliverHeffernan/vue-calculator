@@ -26,7 +26,6 @@ function surroundFunction(e) {
   }
   q = q.replaceAll(")(", ")*(");
   q = q.replaceAll("log10*", "log10");
-  console.log(q);
   return q;
 }
 
@@ -82,15 +81,12 @@ export function newCalculateAnswer(e) {
   ne = ne.replaceAll("pow(", "");
 
   let regex = /[a-zA-Z]/g;
-  console.log(ne);
   if (regex.test(ne)) {
     return "Syntax error, undefined letters"
   }
-  console.log(re);
 
   re = surroundFunction(re);
 
-  console.log(re);
   return eval(re);
 }
 

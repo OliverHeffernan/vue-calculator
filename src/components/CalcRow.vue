@@ -32,6 +32,7 @@ function handleEnter() {
 function focusOnRow() {
   if (mounted) {
     document.getElementById(`row${props.index}`).focus();
+    rowManager.setFocusRowIndex(props.index);
   }
 }
 focusOnRow();
@@ -92,7 +93,7 @@ function copyAnswer() {
   font-size: 12px;
   outline: none;
   border: none;
-  color: white;
+  color: transparent;
 }
 
 brack {
@@ -135,5 +136,13 @@ comm {
 
 .answer:active {
   scale: 1.05;
+}
+
+crs {
+  background: none;
+  border-left: 1px solid white;
+  width: 0;
+  margin: 0;
+  padding: 0;
 }
 </style>

@@ -19,6 +19,10 @@ export class Row {
         //this.answer = calculateAnswer(splitBrackets(replaceAns(this.equation, prevAnswer)));
         this.answer = newCalculateAnswer(replaceAns(this.equation, prevAnswer));
 
+        this.equation += " ";
+        this.equation = this.equation.substring(0, this.equation.length - 1);
+        this.dispEquation = displayEquation(this.equation, this.index);
+
         // document.getElementById(`dispRow${this.index}`).innerHTML = displayEquation(this.equation);
     }
 
@@ -30,7 +34,7 @@ export class Row {
     setIndex(i) { this.index = i; }
 
     getEquation() { return this.equation; }
-    getDispEquation() { return displayEquation(this.equation); }
+    getDispEquation() { return displayEquation(this.equation, this.index); }
     getAnswer() { return this.answer; }
     getIndex() { return this.index; }
 }
@@ -50,7 +54,21 @@ function colouredBrackets(e) {
     return nc;
 }
 
-function displayEquation(e) {
+function displayEquation(e, index) {
+    if (rowManager) {
+        let row = document.getElementById("row" + rowManager.getFocusRowIndex());
+        if (row){
+            console.log("index" + index);
+            console.log("focus index" + rowManager.getFocusRowIndex());
+            if (index == rowManager.getFocusRowIndex()) {
+                let pos = row.selectionStart;
+                let startPart = e.substring(0, pos);
+                let endPart = e.substring(pos, e.length);
+                e = startPart + "<crs></crs>" + endPart;
+            }
+        }
+    }
+
     if (e.substring(0,2) == "//") {
         return `<comm>${e.substring(2, e.length)}</comm>`;
     }
@@ -85,7 +103,6 @@ function displayEquation(e) {
                 d += "<sup>";
                 add = false;
             }
-            console.log(`${depth}, ${d}`);
         }
         if (add) {
             d += e[i];
@@ -111,7 +128,7 @@ function displayEquation(e) {
         ["ln(", "<func>ln</func>("],
         ["cosec(", "<func>cosec</func>("],
         ["sec(", "<func>sec</func>("],
-        ["csc(", "<func>csc</func>("]
+        ["csc(", "<func>csc</func>("],
     ];
 
     for (let i = 0; i < operands.length; i++) {
