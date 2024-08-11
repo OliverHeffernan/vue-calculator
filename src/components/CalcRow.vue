@@ -35,6 +35,15 @@ function focusOnRow() {
   }
 }
 focusOnRow();
+
+function getEquals(index) {
+  return rowManager.getRow(index).getEquation().substring(0,2) == '//' ? '' : '<op> = </op>';
+}
+
+function copyAnswer() {
+  navigator.clipboard.writeText(rowManager.getRow(props.index).getAnswer());
+}
+
 </script>
 
 <template>
@@ -51,10 +60,10 @@ focusOnRow();
       />
     </td>
   </tr>
-  <tr @click="focusOnRow">
-    <td :id="'dispRow' + props.index" v-html="rowManager.getRow(props.index).getDispEquation()"></td>
-    <td><op> = </op></td>
-    <td class="answer">{{ rowManager.getRow(props.index).getAnswer() }}</td>
+  <tr>
+    <td @click="focusOnRow" :id="'dispRow' + props.index" v-html="rowManager.getRow(props.index).getDispEquation()"></td>
+    <td :id="'equal' + props.index" v-html="getEquals(props.index)"></td>
+    <td @click="copyAnswer" class="answer">{{ rowManager.getRow(props.index).getAnswer() }}</td>
   </tr>
 </template>
 
@@ -108,5 +117,23 @@ op {
 
 func {
   color: rgb(119, 157, 233);
+}
+
+comm {
+  color: rgb(83, 83, 83);
+
+}
+
+.answer {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.answer:hover {
+  scale: 1.2;
+}
+
+.answer:active {
+  scale: 1.05;
 }
 </style>

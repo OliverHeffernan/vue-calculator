@@ -51,6 +51,9 @@ function colouredBrackets(e) {
 }
 
 function displayEquation(e) {
+    if (e.substring(0,2) == "//") {
+        return `<comm>${e.substring(2, e.length)}</comm>`;
+    }
     e = e.replaceAll(" ", "");
     let d = "";
     let prevD = "";

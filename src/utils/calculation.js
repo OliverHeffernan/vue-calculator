@@ -32,8 +32,12 @@ function surroundFunction(e) {
 
 
 export function newCalculateAnswer(e) {
+  if (e.substring(0, 2) == "//") {
+    return ""
+  }
   // remove all white space
   e = e.replaceAll(/\s/g, "");
+
 
   if ("+-*/^(".includes(e[e.length - 1])) {
     return "Syntax error, can't end with an operand, or opening bracket"
@@ -47,9 +51,15 @@ export function newCalculateAnswer(e) {
     return "Syntax error, must have equal number of opening and closing brackets"
   }
 
+  if (e.includes("[") || e.includes("]") || e.includes("{") || e.includes("}")) {
+    return "Syntax error, square and curly brackets not supported, use regular brackets instead."
+  }
+
   let ne = e;
   let re = e;
 
+  re = re.replaceAll("π", "(Math.PI)")
+  ne = ne.replaceAll("π", "");
   re = re.replaceAll("sin(", "Math.sin(");
   ne = ne.replaceAll("sin(", "");
   re = re.replaceAll("cos(", "Math.cos(");
