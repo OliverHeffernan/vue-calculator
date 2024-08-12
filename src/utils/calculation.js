@@ -94,6 +94,7 @@ export function newCalculateAnswer(e) {
 
   // re = re.replaceAll("pow(", "Math.pow(");
   ne = ne.replaceAll("pow(", "");
+  ne = ne.replaceAll("i", "");
 
   let regex = /[a-zA-Z]/g;
   if (regex.test(ne)) {
