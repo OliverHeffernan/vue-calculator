@@ -1,5 +1,5 @@
 import { create, all } from 'mathjs'
-
+var prec = 256;
 // configure the default type of numbers as BigNumbers
 const config = {
   // Default type of number
@@ -7,7 +7,7 @@ const config = {
   number: 'BigNumber',
 
   // Number of significant digits for BigNumbers
-  precision: 128
+  precision: prec
 }
 const math = create(all, config)
 
@@ -44,7 +44,7 @@ function surroundFunction(e) {
 
 
 export function newCalculateAnswer(e) {
-  if (e.substring(0, 2) == "//") {
+  if (e.substring(0, 2) == "//" || e == "") {
     return ""
   }
   // remove all white space
@@ -103,7 +103,13 @@ export function newCalculateAnswer(e) {
 
   re = surroundFunction(re);
 
-  return math.evaluate(re);
+  console.log(re);
+
+  let answer = math.evaluate(re).toFixed(10);
+  if (answer == "-0.0000000000") {
+    return "0.0000000000";
+  }
+  return answer;
 }
 
 // complex trig ratios
