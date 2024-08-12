@@ -1,3 +1,16 @@
+import { create, all } from 'mathjs'
+
+// configure the default type of numbers as BigNumbers
+const config = {
+  // Default type of number
+  // Available options: 'number' (default), 'BigNumber', or 'Fraction'
+  number: 'BigNumber',
+
+  // Number of significant digits for BigNumbers
+  precision: 128
+}
+const math = create(all, config)
+
 export function replaceSpecialCharacters(e) {
   return e.replaceAll("pi", "π");
 }
@@ -57,27 +70,29 @@ export function newCalculateAnswer(e) {
   let ne = e;
   let re = e;
 
-  re = re.replaceAll("π", "(Math.PI)")
+  re = re.replaceAll("π", "(pi)")
   ne = ne.replaceAll("π", "");
-  re = re.replaceAll("sin(", "Math.sin(");
+  // re = re.replaceAll("sin(", "sin(");
   ne = ne.replaceAll("sin(", "");
-  re = re.replaceAll("cos(", "Math.cos(");
+  // re = re.replaceAll("cos(", "cos(");
   ne = ne.replaceAll("cos(", "");
-  re = re.replaceAll("cot(", "Math.cot(");
+  // re = re.replaceAll("cot(", "cot(");
+  ne = ne.replaceAll("cot(", "");
+  // re = re.replaceAll("tan(", "tan(");
   ne = ne.replaceAll("tan(", "");
-  re = re.replaceAll("cosec(", "MathCoSec(");
+  re = re.replaceAll("cosec(", "csc(");
   ne = ne.replaceAll("cosec(", "");
-  re = re.replaceAll("csc(", "MathCoSec(");
+  // re = re.replaceAll("csc(", "MathCoSec(");
   ne = ne.replaceAll("csc(", "");
-  re = re.replaceAll("sec(", "MathSec(");
+  // re = re.replaceAll("sec(", "MathSec(");
   ne = ne.replaceAll("sec(", "");
 
-  re = re.replaceAll("log(", "Math.log10(");
+  // re = re.replaceAll("log(", "Math.log10(");
   ne = ne.replaceAll("log(", "");
-  re = re.replaceAll("ln(", "Math.log(");
+  // re = re.replaceAll("ln(", "Math.log(");
   ne = ne.replaceAll("ln(", "");
 
-  re = re.replaceAll("pow(", "Math.pow(");
+  // re = re.replaceAll("pow(", "Math.pow(");
   ne = ne.replaceAll("pow(", "");
 
   let regex = /[a-zA-Z]/g;
@@ -87,7 +102,7 @@ export function newCalculateAnswer(e) {
 
   re = surroundFunction(re);
 
-  return eval(re);
+  return math.evaluate(re);
 }
 
 // complex trig ratios

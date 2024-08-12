@@ -129,6 +129,7 @@ function displayEquation(e, index) {
         ["cosec(", "<func>cosec</func>("],
         ["sec(", "<func>sec</func>("],
         ["csc(", "<func>csc</func>("],
+        ["cot(", "<func>cot</func>("]
     ];
 
     for (let i = 0; i < operands.length; i++) {

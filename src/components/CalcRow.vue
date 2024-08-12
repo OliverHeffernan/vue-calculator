@@ -54,7 +54,6 @@ function copyAnswer() {
         class="inputs"
         :id="'row' + props.index"
         type="text"
-        placeholder="|"
         v-model="rowInput"
         v-on:input="handleInput"
         @keyup.enter="handleEnter"
