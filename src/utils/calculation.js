@@ -69,6 +69,12 @@ export function newCalculateAnswer(e) {
     return "Syntax error, square and curly brackets not supported, use regular brackets instead."
   }
 
+  if (e.includes("()")) {
+    return "Syntax error, can't have empty brackets."
+  }
+
+
+
   let ne = e;
   let re = e;
 
@@ -86,12 +92,13 @@ export function newCalculateAnswer(e) {
   ne = ne.replaceAll("cosec(", "");
   // re = re.replaceAll("csc(", "MathCoSec(");
   ne = ne.replaceAll("csc(", "");
+  ne = ne.replaceAll("cosec(", "");
   // re = re.replaceAll("sec(", "MathSec(");
   ne = ne.replaceAll("sec(", "");
 
-  // re = re.replaceAll("log(", "Math.log10(");
+  re = re.replaceAll("log(", "log10(");
   ne = ne.replaceAll("log(", "");
-  // re = re.replaceAll("ln(", "Math.log(");
+  re = re.replaceAll("ln(", "log(");
   ne = ne.replaceAll("ln(", "");
 
   // re = re.replaceAll("pow(", "Math.pow(");
@@ -112,11 +119,17 @@ export function newCalculateAnswer(e) {
     re = re.replace(/sin\((.*?)\)/g, "sin($1 deg)");
     re = re.replace(/cos\((.*?)\)/g, "cos($1 deg)");
     re = re.replace(/tan\((.*?)\)/g, "tan($1 deg)");
+    re = re.replace(/cot\((.*?)\)/g, "cot($1 deg)");
+    re = re.replace(/sec\((.*?)\)/g, "sec($1 deg)");
+    re = re.replace(/csc\((.*?)\)/g, "csc($1 deg)");
     // Repeat for other trigonometric functions as needed
   } else if (angleUnit === "rad") {
     re = re.replace(/sin\((.*?)\)/g, "sin($1 rad)");
     re = re.replace(/cos\((.*?)\)/g, "cos($1 rad)");
     re = re.replace(/tan\((.*?)\)/g, "tan($1 rad)");
+    re = re.replace(/cot\((.*?)\)/g, "cot($1 rad)");
+    re = re.replace(/sec\((.*?)\)/g, "sec($1 rad)");
+    re = re.replace(/csc\((.*?)\)/g, "csc($1 rad)");
   }
 
   let answer = math.evaluate(re).toFixed(Number(document.getElementById("precisionInput").value));
