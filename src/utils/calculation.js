@@ -1,5 +1,6 @@
 import { create, all } from 'mathjs'
 var prec = 256;
+var angleUnit = 'rad';
 // configure the default type of numbers as BigNumbers
 const config = {
   // Default type of number
@@ -7,7 +8,8 @@ const config = {
   number: 'BigNumber',
 
   // Number of significant digits for BigNumbers
-  precision: prec
+  precision: prec,
+  angles: angleUnit
 }
 const math = create(all, config)
 
@@ -104,8 +106,22 @@ export function newCalculateAnswer(e) {
   re = surroundFunction(re);
 
   console.log(re);
+  angleUnit = document.getElementById("angleInput").innerText;
 
-  let answer = math.evaluate(re).toFixed(10);
+  if (angleUnit === "deg") {
+    re = re.replace(/sin\((.*?)\)/g, "sin($1 deg)");
+    re = re.replace(/cos\((.*?)\)/g, "cos($1 deg)");
+    re = re.replace(/tan\((.*?)\)/g, "tan($1 deg)");
+    // Repeat for other trigonometric functions as needed
+  } else if (angleUnit === "rad") {
+    re = re.replace(/sin\((.*?)\)/g, "sin($1 rad)");
+    re = re.replace(/cos\((.*?)\)/g, "cos($1 rad)");
+    re = re.replace(/tan\((.*?)\)/g, "tan($1 rad)");
+  }
+
+  let answer = math.evaluate(re).toFixed(Number(document.getElementById("precisionInput").value));
+  // let answer = math.evaluate(re).toFixed(10);
+
   if (answer == "-0.0000000000") {
     return "0.0000000000";
   }

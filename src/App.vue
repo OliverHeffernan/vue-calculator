@@ -1,5 +1,6 @@
 <template>
 
+<CalcSettings />
 <CalcTable />
 
 </template>
@@ -7,11 +8,13 @@
 <script>
 
 import CalcTable from './components/CalcTable.vue';
+import CalcSettings from './components/CalcSettings.vue';
 
 export default {
   name: 'App',
   components: {
-    CalcTable
+    CalcTable,
+    CalcSettings
   }
 }
 
