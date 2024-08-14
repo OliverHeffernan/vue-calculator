@@ -46,7 +46,7 @@ function surroundFunction(e) {
 
 
 export function newCalculateAnswer(e) {
-  if (e.substring(0, 2) == "//" || e == "") {
+  if (e.substring(0, 2) == "//") {
     return ""
   }
   // remove all white space
@@ -73,7 +73,9 @@ export function newCalculateAnswer(e) {
     return "Syntax error, can't have empty brackets."
   }
 
-
+  if (e == "") {
+    return "0"
+  }
 
   let ne = e;
   let re = e;
@@ -134,9 +136,16 @@ export function newCalculateAnswer(e) {
 
   let answer = math.evaluate(re).toFixed(Number(document.getElementById("precisionInput").value));
   // let answer = math.evaluate(re).toFixed(10);
+  let lastSigFig = 0;
+  for (let i = 0; i < answer.length; i++) {
+    if (answer[i] != "0") {
+      lastSigFig = i;
+    }
+  }
 
-  if (answer == "-0.0000000000") {
-    return "0.0000000000";
+  answer = answer.substring(0, 1+lastSigFig);
+  if (answer[answer.length - 1] == ".") {
+    answer = answer.substring(0, answer.length - 1);
   }
   return answer;
 }
