@@ -52,13 +52,18 @@ export function newCalculateAnswer(e) {
   // remove all white space
   e = e.replaceAll(/\s/g, "");
 
+  e = e.replaceAll("{", "(");
+  e = e.replaceAll("}", ")");
+  e = e.replaceAll("[", "(");
+  e = e.replaceAll("]", ")");
+
 
   if ("+-*/^(".includes(e[e.length - 1])) {
-    return "Syntax error, can't end with an operand, or opening bracket"
+    return "Syntax error, can't end with an operator, or opening bracket"
   }
 
   if ("+*/^)".includes(e[0])) {
-    return "Syntax error, can't begin with an operand, or closing bracket"
+    return "Syntax error, can't begin with an operator, or closing bracket"
   }
 
   if (e.replace(/[^(]/g, "").length != e.replace(/[^)]/g, "").length) {
@@ -71,6 +76,14 @@ export function newCalculateAnswer(e) {
 
   if (e.includes("()")) {
     return "Syntax error, can't have empty brackets."
+  }
+
+  if (e.includes("#")) {
+    return "Syntax error, remove #"
+  }
+
+  if (e.includes("pow")) {
+    return "Use ^ for powers. e.g. 5^2=25"
   }
 
   if (e == "") {

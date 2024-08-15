@@ -43,10 +43,12 @@ function colouredBrackets(e) {
     let depth = 0;
     let nc = "";
     for (let i = 0; i < e.length; i++) {
-        if (e[i] == "(") {
-            nc += `<brack class="depth${depth++}">(</brack>`;
-        } else if (e[i] == ")") {
-            nc += `<brack class="depth${--depth}">)</brack>`;
+        // if (e[i] == "(") {
+        if ("({[".includes(e[i])) {
+            nc += `<brack class="depth${depth++}">${e[i]}</brack>`;
+        //} else if (e[i] == ")") {
+        } else if (")}]".includes(e[i])) {
+            nc += `<brack class="depth${--depth}">${e[i]}</brack>`;
         } else {
             nc += e[i];
         }
@@ -55,16 +57,15 @@ function colouredBrackets(e) {
 }
 
 function displayEquation(e, index) {
+    var pos;
+    var offset = 0;
     if (rowManager) {
         let row = document.getElementById("row" + rowManager.getFocusRowIndex());
         if (row){
             console.log("index" + index);
             console.log("focus index" + rowManager.getFocusRowIndex());
             if (index == rowManager.getFocusRowIndex()) {
-                let pos = row.selectionStart;
-                let startPart = e.substring(0, pos);
-                let endPart = e.substring(pos, e.length);
-                e = startPart + "<crs></crs>" + endPart;
+                pos = row.selectionStart;
             }
         }
     }
@@ -75,33 +76,52 @@ function displayEquation(e, index) {
     e = e.replaceAll(" ", "");
     let d = "";
     let prevD = "";
-    let power = false;
+    let powerDepths = [];
     let depth = 0;
     let add = true;
+    // let lastBrackPowDepth = 0;
+    let brackPowDepths = [];
     for (let i = 0; i < e.length; i++) {
         add = true;
-        if (!power) {
-            if (e.substring(i, i + 4) == "pow(") {
-                i += 4;
-                power = true;
-            }
+        if (e[i] == "^") {
+            powerDepths.push(depth);
+            add = false;
+            d += "<sup>";
+            offset += 6;
         }
-        else {
-            if (e[i] == "(") {
-                depth++
-            }
-            if (e[i] == ")") {
-                depth--
-                if (depth == -1) {
+        
+        if ("({[".includes(e[i])) {
+            depth++
+            if (powerDepths.length >= brackPowDepths[brackPowDepths.length - 1] && e[i - 1] != "^") {
+                while (powerDepths.length > 0) {
+                    powerDepths.pop();
                     d += "</sup>";
                     add = false;
-                    power = false;
-                    depth = 0;
+                    offset += 7;
                 }
+                d += e[i];
             }
-            if (e[i] == ",") {
-                d += "<sup>";
+            // lastBrackPowDepth = powerDepths.length;
+            brackPowDepths.push(powerDepths.length);
+        } else if (")}]".includes(e[i])) {
+            depth--
+            if (powerDepths.length >= brackPowDepths[brackPowDepths.length - 1]) {
                 add = false;
+                while (powerDepths.length > brackPowDepths[brackPowDepths.length - 1]) {
+                    powerDepths.pop();
+                    d += "</sup>";
+                    offset += 7;
+                }
+                d += e[i];
+            }
+            brackPowDepths.pop();
+        }
+
+        if (depth == powerDepths[powerDepths.length - 1] && "+-/*".includes(e[i])) {
+            while (powerDepths.length > brackPowDepths[brackPowDepths.length - 1]) {
+                powerDepths.pop();
+                d += "</sup>";
+                offset += 7;
             }
         }
         if (add) {
@@ -113,9 +133,7 @@ function displayEquation(e, index) {
         prevD = d;
     }
 
-    if (d.includes("pow(")) {
-        d = displayEquation(d);
-    }
+    d = d.substring(0, pos + offset) + "<crs></crs>" + d.substring(pos + offset, d.length);
 
     let operands = [
         ["+", "<op> + </op>"],
@@ -129,7 +147,8 @@ function displayEquation(e, index) {
         ["cosec(", "<func>cosec</func>("],
         ["sec(", "<func>sec</func>("],
         ["csc(", "<func>csc</func>("],
-        ["cot(", "<func>cot</func>("]
+        ["cot(", "<func>cot</func>("],
+        ["pow(", "<func>pow</func>("]
     ];
 
     for (let i = 0; i < operands.length; i++) {
