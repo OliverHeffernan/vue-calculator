@@ -57,83 +57,21 @@ function colouredBrackets(e) {
 }
 
 function displayEquation(e, index) {
-    var pos;
-    var offset = 0;
-    if (rowManager) {
-        let row = document.getElementById("row" + rowManager.getFocusRowIndex());
-        if (row){
-            console.log("index" + index);
-            console.log("focus index" + rowManager.getFocusRowIndex());
-            if (index == rowManager.getFocusRowIndex()) {
-                pos = row.selectionStart;
-            }
-        }
-    }
-
     if (e.substring(0,2) == "//") {
         return `<comm>${e.substring(2, e.length)}</comm>`;
     }
     e = e.replaceAll(" ", "");
-    let d = "";
-    let prevD = "";
-    let powerDepths = [];
-    let depth = 0;
-    let add = true;
-    // let lastBrackPowDepth = 0;
-    let brackPowDepths = [];
-    for (let i = 0; i < e.length; i++) {
-        add = true;
-        if (e[i] == "^") {
-            powerDepths.push(depth);
-            add = false;
-            d += "<sup>";
-            offset += 6;
-        }
-        
-        if ("({[".includes(e[i])) {
-            depth++
-            if (powerDepths.length >= brackPowDepths[brackPowDepths.length - 1] && e[i - 1] != "^") {
-                while (powerDepths.length > 0) {
-                    powerDepths.pop();
-                    d += "</sup>";
-                    add = false;
-                    offset += 7;
-                }
-                d += e[i];
-            }
-            // lastBrackPowDepth = powerDepths.length;
-            brackPowDepths.push(powerDepths.length);
-        } else if (")}]".includes(e[i])) {
-            depth--
-            if (powerDepths.length >= brackPowDepths[brackPowDepths.length - 1]) {
-                add = false;
-                while (powerDepths.length > brackPowDepths[brackPowDepths.length - 1]) {
-                    powerDepths.pop();
-                    d += "</sup>";
-                    offset += 7;
-                }
-                d += e[i];
-            }
-            brackPowDepths.pop();
-        }
-
-        if (depth == powerDepths[powerDepths.length - 1] && "+-/*".includes(e[i])) {
-            while (powerDepths.length > brackPowDepths[brackPowDepths.length - 1]) {
-                powerDepths.pop();
-                d += "</sup>";
-                offset += 7;
+    let offset = 0;
+    if (rowManager) {
+        let row = document.getElementById("row" + rowManager.getFocusRowIndex());
+        if (row){
+            if (index == rowManager.getFocusRowIndex()) {
+                var pos = row.selectionStart;
+                e = e.substring(0, pos + offset) + "<crs/>" + e.substring(pos + offset, e.length);
             }
         }
-        if (add) {
-            d += e[i];
-        }
-        if (d == "undefined") {
-            d = prevD;
-        }
-        prevD = d;
     }
-
-    d = d.substring(0, pos + offset) + "<crs></crs>" + d.substring(pos + offset, d.length);
+    e = convertToSuperscript(e);
 
     let operands = [
         ["+", "<op> + </op>"],
@@ -152,14 +90,20 @@ function displayEquation(e, index) {
     ];
 
     for (let i = 0; i < operands.length; i++) {
-        d = d.replaceAll(operands[i][0], operands[i][1]);
+        e = e.replaceAll(operands[i][0], operands[i][1]);
     }
 
-    if (d == "undefined") {
+    if (e == "undefined") {
         return "";
     }
 
-    d = colouredBrackets(d);
+    e= colouredBrackets(e);
 
-    return d
+    return e
+}
+
+function convertToSuperscript(e) {
+    e = e.replaceAll("^", "<sup>");
+    e = e.replaceAll(";", "</sup>");
+    return e;
 }

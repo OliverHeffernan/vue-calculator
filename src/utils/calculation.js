@@ -51,6 +51,8 @@ export function newCalculateAnswer(e) {
   }
   // remove all white space
   e = e.replaceAll(/\s/g, "");
+  e = e.replaceAll("^", "^(");
+  e = e.replaceAll(";", ")");
 
   e = e.replaceAll("{", "(");
   e = e.replaceAll("}", ")");
@@ -66,8 +68,17 @@ export function newCalculateAnswer(e) {
     return "Syntax error, can't begin with an operator, or closing bracket"
   }
 
-  if (e.replace(/[^(]/g, "").length != e.replace(/[^)]/g, "").length) {
+  let numOfOpenings = e.replace(/[^(]/g, "").length;
+  let numOfClosings = e.replace(/[^)]/g, "").length;
+  if (numOfOpenings < numOfClosings) {
     return "Syntax error, must have equal number of opening and closing brackets"
+  }
+
+  if (numOfOpenings > numOfClosings) {
+    let times = numOfOpenings - numOfClosings;
+    for (let i = 0; i < times; i++) {
+      e += ")";
+    }
   }
 
   if (e.includes("[") || e.includes("]") || e.includes("{") || e.includes("}")) {
@@ -127,7 +138,6 @@ export function newCalculateAnswer(e) {
 
   re = surroundFunction(re);
 
-  console.log(re);
   angleUnit = document.getElementById("angleInput").innerText;
 
   if (angleUnit === "deg") {
@@ -162,16 +172,3 @@ export function newCalculateAnswer(e) {
   }
   return answer;
 }
-
-// complex trig ratios
-
-function MathSec(a) {
-  return 1/Math.cos(a);
-}
-
-function MathCoSec(a) {
-  return 1/Math.sin(a);
-}
-
-console.log(MathSec(5));
-console.log(MathCoSec(5));

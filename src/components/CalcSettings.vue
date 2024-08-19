@@ -7,7 +7,6 @@ onMounted(() => {
 });
 
 function openCloseSettings() {
-    console.log('hello');
     open = !open;
     document.getElementById("settings").className = open ? "open" : "closed";
     document.getElementById("settingsButton").className = open? "openButton" : "closedButton";
