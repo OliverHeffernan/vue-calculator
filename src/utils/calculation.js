@@ -51,6 +51,15 @@ export function newCalculateAnswer(e) {
   }
   // remove all white space
   e = e.replaceAll(/\s/g, "");
+
+  let supOp = e.replace(/[^^]/g, "").length;
+  let supCl = e.replace(/[^;]/g, "").length;
+  if (supOp > supCl) {
+    return "Syntax error, close powers using ;"
+  }
+  if (supOp < supCl) {
+    return "Syntax error, more power closings than openings"
+  }
   e = e.replaceAll("^", "^(");
   e = e.replaceAll(";", ")");
 
@@ -70,16 +79,16 @@ export function newCalculateAnswer(e) {
 
   let numOfOpenings = e.replace(/[^(]/g, "").length;
   let numOfClosings = e.replace(/[^)]/g, "").length;
-  if (numOfOpenings < numOfClosings) {
+  if (numOfOpenings != numOfClosings) {
     return "Syntax error, must have equal number of opening and closing brackets"
   }
 
-  if (numOfOpenings > numOfClosings) {
-    let times = numOfOpenings - numOfClosings;
-    for (let i = 0; i < times; i++) {
-      e += ")";
-    }
-  }
+  // if (numOfOpenings > numOfClosings) {
+  //   let times = numOfOpenings - numOfClosings;
+  //   for (let i = 0; i < times; i++) {
+  //     e += ")";
+  //   }
+  // }
 
   if (e.includes("[") || e.includes("]") || e.includes("{") || e.includes("}")) {
     return "Syntax error, square and curly brackets not supported, use regular brackets instead."
