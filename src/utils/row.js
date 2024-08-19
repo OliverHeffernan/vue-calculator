@@ -104,6 +104,6 @@ function displayEquation(e, index) {
 
 function convertToSuperscript(e) {
     e = e.replaceAll("^", "<sup>");
-    e = e.replaceAll(";", "</sup>");
+    e = e.replaceAll(";", "</sup> ");
     return e;
 }
