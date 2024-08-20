@@ -166,18 +166,24 @@ export function newCalculateAnswer(e) {
     re = re.replace(/csc\((.*?)\)/g, "csc($1 rad)");
   }
 
-  let answer = math.evaluate(re).toFixed(Number(document.getElementById("precisionInput").value));
-  // let answer = math.evaluate(re).toFixed(10);
-  let lastSigFig = 0;
-  for (let i = 0; i < answer.length; i++) {
-    if (answer[i] != "0") {
-      lastSigFig = i;
+  try {
+    let answer = math.evaluate(re).toFixed(Number(document.getElementById("precisionInput").value));
+    // let answer = math.evaluate(re).toFixed(10);
+    let lastSigFig = 0;
+    for (let i = 0; i < answer.length; i++) {
+      if (answer[i] != "0") {
+        lastSigFig = i;
+      }
+    }
+
+    answer = answer.substring(0, 1+lastSigFig);
+    if (answer[answer.length - 1] == ".") {
+      answer = answer.substring(0, answer.length - 1);
+    }
+    return answer;
+  } catch (error) {
+    if (error.message == "math.evaluate(...).toFixed is not a function") {
+      return "Math error, could be a negative log.";
     }
   }
-
-  answer = answer.substring(0, 1+lastSigFig);
-  if (answer[answer.length - 1] == ".") {
-    answer = answer.substring(0, answer.length - 1);
-  }
-  return answer;
 }
