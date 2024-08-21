@@ -57,17 +57,22 @@ function colouredBrackets(e) {
 }
 
 function displayEquation(e, index) {
+    let commented = false;
     if (e.substring(0,2) == "//") {
-        return `<comm>${e.substring(2, e.length)}</comm>`;
+        // return `<comm>${e.substring(2, e.length)}</comm>`;
+        commented = true;
     }
-    e = e.replaceAll(" ", "");
     let offset = 0;
     if (rowManager) {
         let row = document.getElementById("row" + rowManager.getFocusRowIndex());
         if (row){
             if (index == rowManager.getFocusRowIndex()) {
                 var pos = row.selectionStart;
-                e = e.substring(0, pos + offset) + "<crs/>" + e.substring(pos + offset, e.length);
+                if (e[pos + offset - 1] == " ") {
+                    e = e.substring(0, pos + offset) + "<crs class='lastSpace'/>" + e.substring(pos + offset, e.length);
+                } else {
+                    e = e.substring(0, pos + offset) + "<crs/>" + e.substring(pos + offset, e.length);
+                }
             }
         }
     }
@@ -97,9 +102,14 @@ function displayEquation(e, index) {
         return "";
     }
 
-    e= colouredBrackets(e);
+    e = colouredBrackets(e);
 
-    return e
+
+    if (commented) {
+        return `<comm>${e}</comm>`;
+    } else {
+        return e;
+    }
 }
 
 function convertToSuperscript(e) {

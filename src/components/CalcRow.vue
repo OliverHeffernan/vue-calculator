@@ -144,4 +144,12 @@ crs {
   margin: 0;
   padding: 0;
 }
+
+.lastSpace {
+  margin-left: 12px;
+}
+
+sup {
+  color: inherit;
+}
 </style>
