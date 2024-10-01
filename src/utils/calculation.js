@@ -1,6 +1,7 @@
 // library to be used for calculations
 import { create, all } from 'mathjs'
 
+
 // the precision of the calculations, this is then rounded using the number that is inputted by the user in settings.
 var prec = 256;
 
@@ -58,6 +59,12 @@ export function newCalculateAnswer(e) {
   if (e.substring(0, 2) == "//") {
     return ""
   }
+  if (e.includes("=")) {
+    setVariable(e);
+    return newCalculateAnswer(e.split("=")[1]);
+  }
+
+  e = replaceVariables(e, variables);
 
   if (document.getElementById("precisionInput").value < 1) {
     return "set precision to a number greater than 1"
@@ -134,25 +141,54 @@ export function newCalculateAnswer(e) {
   // functions replaced with proper syntax to be used in math.js library
   let re = e;
 
-  re = re.replaceAll("π", "(pi)")
-  ne = ne.replaceAll("π", "");
-  ne = ne.replaceAll("sin(", "");
-  ne = ne.replaceAll("cos(", "");
-  ne = ne.replaceAll("cot(", "");
-  ne = ne.replaceAll("tan(", "");
-  re = re.replaceAll("cosec(", "csc(");
-  ne = ne.replaceAll("cosec(", "");
-  ne = ne.replaceAll("csc(", "");
-  ne = ne.replaceAll("cosec(", "");
-  ne = ne.replaceAll("sec(", "");
+  // re = re.replaceAll("π", "(pi)")
+  // ne = ne.replaceAll("π", "");
+  // ne = ne.replaceAll("sin(", "");
+  // ne = ne.replaceAll("cos(", "");
+  // ne = ne.replaceAll("cot(", "");
+  // ne = ne.replaceAll("tan(", "");
+  // re = re.replaceAll("cosec(", "csc(");
+  // ne = ne.replaceAll("cosec(", "");
+  // ne = ne.replaceAll("csc(", "");
+  // ne = ne.replaceAll("cosec(", "");
+  // ne = ne.replaceAll("sec(", "");
 
-  re = re.replaceAll("log(", "log10(");
-  ne = ne.replaceAll("log(", "");
-  re = re.replaceAll("ln(", "log(");
-  ne = ne.replaceAll("ln(", "");
+  // re = re.replaceAll("log(", "log10(");
+  // ne = ne.replaceAll("log(", "");
+  // re = re.replaceAll("ln(", "log(");
+  // ne = ne.replaceAll("ln(", "");
+
+  // re = re.replaceAll("e", "(e)");
+  // ne = ne.replaceAll("e", "");
+
+  let replacements = [
+    ["π", "(pi)"],
+    ["cosec(", "csc("],
+    ["log(", "log10("],
+    ["ln(", "log("],
+    ["e", "(e)"]
+  ];
+  re = replaceExpressions(re, replacements, false);
+  console.log(re);
+
+  let definedFunctions = [
+    "sin(",
+    "cos(",
+    "cot(",
+    "tan(",
+    "csc(",
+    "sec(",
+    "i"
+  ];
+
+  replacements.forEach((replacement) => {
+    definedFunctions.push(replacement[0]);
+  });
+
+  ne = replaceExpressions(ne, definedFunctions, true);
 
   // imaginary numbers
-  ne = ne.replaceAll("i", "");
+  // ne = ne.replaceAll("i", "");
 
   // evaluating brackets so that no errors are encountered. For example, previously if you had a power within a trig function, an error would occur
   // this function avoids this error.
@@ -233,6 +269,13 @@ export function newCalculateAnswer(e) {
   }
 }
 
+function replaceExpressions(e, replacements, replaceWithBlank) {
+  for (let i = 0; i < replacements.length; i++) {
+    e = replaceWithBlank ? e.replaceAll(replacements[i], "") : e.replaceAll(replacements[i][0], replacements[i][1]);
+  }
+  return e;
+}
+
 // used to evaluate complex brackets before putting the equation into math.js. Avoids erros that occur when you have pwoers iwthin a trig function
 function evaluateBrack(e) {
   // depth of nested brackets
@@ -254,4 +297,25 @@ function evaluateBrack(e) {
       }
     }
   }
+}
+
+let variables = new Map();
+
+function setVariable(equation) {
+  let calculation = equation.split("=")[1];
+  if (calculation != "") {
+    variables.set(equation.split("=")[0], newCalculateAnswer(equation.split("=")[1]));
+  }
+}
+
+function replaceVariables(equation, variables) {
+  let sortedVariables = new Map(
+    Array.from(variables).sort((a, b) => b[0].length - a[0].length)
+  );
+
+
+  for (let [key,value] of sortedVariables) {
+    equation = equation.replaceAll(key, `(${value})`);
+  }
+  return equation;
 }

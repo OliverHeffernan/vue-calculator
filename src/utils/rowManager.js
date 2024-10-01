@@ -37,7 +37,6 @@ class RowManager {
 const rowManager = Object.freeze(new RowManager());
 
 function handleEvent(event) {
-    console.log("event");
     if (event.key !== "Enter") {
         rowManager.calculateAllRows();
     }

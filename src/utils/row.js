@@ -82,6 +82,7 @@ function displayEquation(e, index) {
         ["+", "<op> + </op>"],
         ["-", "<op> - </op>"],
         ["*", "<op> × </op>"],
+        ["=", "<op> = </op>"],
         ["sin(", "<func>sin</func>("],
         ["cos(", "<func>cos</func>("],
         ["tan(", "<func>tan</func>("],

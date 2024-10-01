@@ -8,6 +8,9 @@ In this app, you can have infinite lines of calculations, similar to a graphics 
 To copy a result froma calculation to the clipboard, simply click the result, and it will be copied to the clipboard to be pasted later.
 You can also type "ans" to reference the answer to the previous calculation.
 
+#### Variables
+To create a variable, type what you want to call the variable, followed by an equals sign, followed by the value of the variable. You can then reference this variable in later calculations by typing the name of the variable.
+
 #### Powers
 To use powers in your calculations, use the "^" symbol to write in super script. Then to end the power type ";", and the cursor will drop back down to the lower level. For example, if I wanted to calculate 5 squared, I would type "5^2;". This application also supports nested powers, for example, if I wanted to calculate 5 to the power of 5 squared, I would type "5^(5^2;);".
 

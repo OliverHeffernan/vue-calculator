@@ -22,7 +22,7 @@ export default {
 
 <style>
 * {
-  background-color: black;
+  background-color: #0C1118;
   color: white;
   font-family: "Inconsolata", monospace;
   font-optical-sizing: auto;
@@ -44,6 +44,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin-top: 60px;
-  background-color: black;
+  background-color: #0C1118;
 }
 </style>
