@@ -20,7 +20,9 @@ const config = {
 }
 
 // set up the library
-const math = create(all, config)
+const math = create(all, config);
+
+console.log(math.evaluate("5e"));
 
 // used externally to replace pi with the symbol pi when the equation is displayed
 export function replaceSpecialCharacters(e) {
@@ -66,25 +68,12 @@ export function newCalculateAnswer(e) {
 
   e = replaceVariables(e, variables);
 
-  if (document.getElementById("precisionInput").value < 1) {
-    return "set precision to a number greater than 1"
-  }
-
-  // make sure that only intergers are entered into precision
-  document.getElementById("precisionInput").value = document.getElementById("precisionInput").value.toString().replaceAll(".", "");
-
-
   // remove all white space
   e = e.replaceAll(/\s/g, "");
 
-  // checks that all superscripts are closed, otherwise an error is returned
-  let supOp = e.replace(/[^^]/g, "").length;
-  let supCl = e.replace(/[^;]/g, "").length;
-  if (supOp > supCl) {
-    return "Syntax error, close powers using ;"
-  }
-  if (supOp < supCl) {
-    return "Syntax error, more power closings than openings"
+
+  if (initialErrorChecks(e)[0]) {
+    return initialErrorChecks(e)[1];
   }
 
   // replace superscript opening and closing with opening and closing brackets, so that they are handled correctly
@@ -96,77 +85,20 @@ export function newCalculateAnswer(e) {
   e = e.replaceAll("}", ")");
   e = e.replaceAll("[", "(");
   e = e.replaceAll("]", ")");
-
-
-  // makes sure that the equation does not end unexpectedly
-  if ("+-*/^(".includes(e[e.length - 1])) {
-    return "Syntax error, can't end with an operator, or opening bracket"
-  }
-
-  // makes sure that the equation does not begin unexpectedly
-  if ("+*/^)".includes(e[0])) {
-    return "Syntax error, can't begin with an operator, or closing bracket"
-  }
-
-  // makes sure that the number of closing brackets is the same as the number of opening brackets
-  let numOfOpenings = e.replace(/[^(]/g, "").length;
-  let numOfClosings = e.replace(/[^)]/g, "").length;
-  if (numOfOpenings != numOfClosings) {
-    return "Syntax error, must have equal number of opening and closing brackets"
-  }
-
-  // makes sure that the equation does not have empty brackets
-  if (e.includes("()")) {
-    return "Syntax error, can't have empty brackets."
-  }
-
-  // unexpected character
-  if (e.includes("#")) {
-    return "Syntax error, remove #"
-  }
-
-  // pow not supported, show the user how to powers properly
-  if (e.includes("pow")) {
-    return "Use ^ for powers. e.g. 5^2=25. Close a power using ';'"
-  }
-
   // if the equation is blank, return 0
   if (e == "") {
     return "0"
   }
 
-  // all defined functions will be replaced out for blank, after that, if there is any undefined text remaining, an error will be returned.
-  let ne = e;
-
   // functions replaced with proper syntax to be used in math.js library
   let re = e;
 
-  // re = re.replaceAll("π", "(pi)")
-  // ne = ne.replaceAll("π", "");
-  // ne = ne.replaceAll("sin(", "");
-  // ne = ne.replaceAll("cos(", "");
-  // ne = ne.replaceAll("cot(", "");
-  // ne = ne.replaceAll("tan(", "");
-  // re = re.replaceAll("cosec(", "csc(");
-  // ne = ne.replaceAll("cosec(", "");
-  // ne = ne.replaceAll("csc(", "");
-  // ne = ne.replaceAll("cosec(", "");
-  // ne = ne.replaceAll("sec(", "");
-
-  // re = re.replaceAll("log(", "log10(");
-  // ne = ne.replaceAll("log(", "");
-  // re = re.replaceAll("ln(", "log(");
-  // ne = ne.replaceAll("ln(", "");
-
-  // re = re.replaceAll("e", "(e)");
-  // ne = ne.replaceAll("e", "");
-
+  // array of what will be displayed in the equations, and what they need to be replaced with before parsing the equation.
   let replacements = [
     ["π", "(pi)"],
     ["cosec(", "csc("],
     ["log(", "log10("],
-    ["ln(", "log("],
-    ["e", "(e)"]
+    ["ln(", "log("]
   ];
   re = replaceExpressions(re, replacements, false);
   console.log(re);
@@ -185,10 +117,15 @@ export function newCalculateAnswer(e) {
     definedFunctions.push(replacement[0]);
   });
 
-  ne = replaceExpressions(ne, definedFunctions, true);
 
-  // imaginary numbers
-  // ne = ne.replaceAll("i", "");
+  // all defined functions will be replaced out for blank, after that, if there is any undefined text remaining, an error will be returned.
+  let ne = replaceExpressions(e, definedFunctions, true);
+
+  // checking if for any undefined characters, return an error if there are.
+  let regex = /[a-zA-Z]/g;
+  if (regex.test(ne)) {
+    return "Syntax error, undefined letters"
+  }
 
   // evaluating brackets so that no errors are encountered. For example, previously if you had a power within a trig function, an error would occur
   // this function avoids this error.
@@ -200,11 +137,6 @@ export function newCalculateAnswer(e) {
   re = re.replaceAll("[", "(");
   re = re.replaceAll("]", ")");
 
-  // checking if for any undefined characters, return an error if there are.
-  let regex = /[a-zA-Z]/g;
-  if (regex.test(ne)) {
-    return "Syntax error, undefined letters"
-  }
 
   // makes sure that brackets are handled correctly, notably making sure that they multiply with eacher other.
   re = surroundFunction(re);
@@ -212,29 +144,17 @@ export function newCalculateAnswer(e) {
   // grab the unit for angles from settings
   angleUnit = document.getElementById("angleInput").innerText;
 
-  // replaces trig functions with the correct unit
-  if (angleUnit === "deg") {
-    re = re.replace(/sin\((.*?)\)/g, "sin($1 deg)");
-    re = re.replace(/cos\((.*?)\)/g, "cos($1 deg)");
-    re = re.replace(/tan\((.*?)\)/g, "tan($1 deg)");
-    re = re.replace(/cot\((.*?)\)/g, "cot($1 deg)");
-    re = re.replace(/sec\((.*?)\)/g, "sec($1 deg)");
-    re = re.replace(/csc\((.*?)\)/g, "csc($1 deg)");
-    // Repeat for other trigonometric functions as needed
-  } else if (angleUnit === "rad") {
-    re = re.replace(/sin\((.*?)\)/g, "sin($1 rad)");
-    re = re.replace(/cos\((.*?)\)/g, "cos($1 rad)");
-    re = re.replace(/tan\((.*?)\)/g, "tan($1 rad)");
-    re = re.replace(/cot\((.*?)\)/g, "cot($1 rad)");
-    re = re.replace(/sec\((.*?)\)/g, "sec($1 rad)");
-    re = re.replace(/csc\((.*?)\)/g, "csc($1 rad)");
-  } else if (angleUnit === "grad") {
-    re = re.replace(/sin\((.*?)\)/g, "sin($1 grad)");
-    re = re.replace(/cos\((.*?)\)/g, "cos($1 grad)");
-    re = re.replace(/tan\((.*?)\)/g, "tan($1 grad)");
-    re = re.replace(/cot\((.*?)\)/g, "cot($1 grad)");
-    re = re.replace(/sec\((.*?)\)/g, "sec($1 grad)");
-    re = re.replace(/csc\((.*?)\)/g, "csc($1 grad)");
+  let trigFunctionsReplacements = [
+    [/sin\((.*?)\)/g, `sin($1 ${angleUnit})`],
+    [/cos\((.*?)\)/g, `cos($1 ${angleUnit})`],
+    [/tan\((.*?)\)/g, `tan($1 ${angleUnit}`],
+    [/cot\((.*?)\)/g, `cot($1 ${angleUnit})`],
+    [/sec\((.*?)\)/g, `sec($1 ${angleUnit})`],
+    [/csc\((.*?)\)/g, `csc($1 ${angleUnit})`]
+  ];
+
+  for (let i = 0; i < trigFunctionsReplacements.length; i++) {
+    re = re.replace(trigFunctionsReplacements[i][0], trigFunctionsReplacements[i][1]);
   }
 
   try {
@@ -267,6 +187,65 @@ export function newCalculateAnswer(e) {
       return error.message;
     }
   }
+}
+
+function initialErrorChecks(e) {
+  let supOp = e.replace(/[^^]/g, "").length;
+  let supCl = e.replace(/[^;]/g, "").length;
+
+  if (supOp > supCl) {
+    return [true, "Syntax error, close powers using ;"]
+  }
+  
+  if (supOp < supCl) {
+    return [true, "Syntax error, more power closings than openings"]
+  }
+
+  // check if precison is set to a positive number, more than one
+  if (document.getElementById("precisionInput").value < 1) {
+    return "set precision to a number greater than 1"
+  }
+
+  // make sure that only integers are entered into precision
+  document.getElementById("precisionInput").value = document.getElementById("precisionInput").value.toString().replaceAll(".", "");
+
+  // pow not supported, show the user how to use powers properly
+  if (e.includes("pow")) {
+    return [true, "Use ^ for powers. e.g. 5^2;=25. Close a power using ';'"]
+  }
+
+  // makes sure that the equation does not end unexpectedly
+  if ("+-*/^(".includes(e[e.length - 1])) {
+    return [true, "Syntax error, can't end with an operator, or opening bracket"]
+  }
+
+  // makes sure that the equation does not begin unexpectedly
+  if ("+*/^)".includes(e[0])) {
+    return [true, "Syntax error, can't begin with an operator, or closing bracket"]
+  }
+
+  // makes sure that the number of closing brackets is the same as the number of opening brackets
+  let numOfOpenings = e.replace(/[^(]/g, "").length;
+  let numOfClosings = e.replace(/[^)]/g, "").length;
+  if (numOfOpenings != numOfClosings) {
+    return [true, "Syntax error, must have equal number of opening and closing brackets"]
+  }
+
+  // makes sure that the equation does not have empty brackets
+  if (e.includes("()")) {
+    return [true, "Syntax error, can't have empty brackets."]
+  }
+
+  // unexpected character
+  if (e.includes("#")) {
+    return [true, "Syntax error, remove #"]
+  }
+
+  // if the equation is blank, return 0
+  if (e == "") {
+    return [true, "0"]
+  }
+  return [false]
 }
 
 function replaceExpressions(e, replacements, replaceWithBlank) {
