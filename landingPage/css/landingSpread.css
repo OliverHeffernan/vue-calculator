@@ -1,0 +1,25 @@
+#landingSpread {
+    width: calc(100vw - 40px);
+    background-color: #151d29;
+    display: flex;
+    margin: 20px;
+    border-radius: 20px;
+}
+
+#leftSide {
+    padding: 50px;
+    width: 50%;
+}
+
+#leftSide h1 {
+    font-size: 150px;
+    margin-bottom: 25px;
+}
+
+#rightSide img {
+    width: 90%;
+    height: auto;
+    margin: 20px;
+    float: right;
+    border-radius: 15px;
+}

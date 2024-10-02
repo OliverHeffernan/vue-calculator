@@ -3,13 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- main stylesheet -->
+    <link rel="stylesheet" href="landingPage/css/style.css">
+
+    <!-- navbar stylesheet -->
+    <link rel="stylesheet" href="landingPage/css/navbar.css">
+
+    <!-- landing spread stylesheet -->
+    <link rel="stylesheet" href="landingPage/css/landingSpread.css">
+
+    <!-- features section stylesheet -->
+    <link rel="stylesheet" href="landingPage/css/featuresSection.css">
+
+    <!-- feature container stylesheet -->
+    <link rel="stylesheet" href="landingPage/css/featureContainer.css">
+
+    <title>Vue Calculator</title>
 </head>
 <body>
-    
+    <imports>
+        landingPage/imports/navbar.html,
+        landingPage/imports/landingSpread.html,
+        landingPage/imports/featuresSection.html,
+        landingPage/imports/featureContainer.html
+    </imports>
+    <blocks></blocks>
+    <navbar></navbar>
+    <landingSpread></landingSpread>
+    <featuresSection></featuresSection>
 </body>
 
 <script>
-    window.location.href = "https://oliverheffernan.github.io/vue-calculator/dist/";
 </script>
+<script src="https://cdn.jsdelivr.net/gh/OliverHeffernan/block-js-library@latest/block.js"></script>
 </html>

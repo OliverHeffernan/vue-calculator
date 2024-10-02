@@ -2,6 +2,7 @@
 
 <CalcSettings />
 <CalcTable />
+<TransitionCursor />
 
 </template>
 
@@ -9,12 +10,14 @@
 
 import CalcTable from './components/CalcTable.vue';
 import CalcSettings from './components/CalcSettings.vue';
+import TransitionCursor from './components/TransitionCursor.vue';
 
 export default {
   name: 'App',
   components: {
     CalcTable,
-    CalcSettings
+    CalcSettings,
+    TransitionCursor
   }
 }
 

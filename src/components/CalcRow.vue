@@ -18,6 +18,7 @@ onMounted(() => {
     document.getElementById(`row${props.index}`).focus();
   }
   mounted = true;
+  rowManager.updateSmoothCursorPosition();
 });
 
 function handleInput() {
@@ -27,6 +28,12 @@ function handleInput() {
 
 function handleEnter() {
   rowManager.addRowAt(props.index);
+}
+
+function handleBackspace() {
+  if (rowManager.getRow(props.index).equation == "") {
+    rowManager.removeRowAt(props.index);
+  }
 }
 
 function focusOnRow() {
@@ -57,6 +64,7 @@ function copyAnswer() {
         v-model="rowInput"
         v-on:input="handleInput"
         @keyup.enter="handleEnter"
+        @keyup.backspace="handleBackspace"
       />
     </td>
   </tr>
@@ -68,8 +76,8 @@ function copyAnswer() {
 </template>
 
 <style>
-.inputs {
-  /* width: 50vw; */
+/* .inputs {
+  width: 50vw;
   width: 1ch;
   border: none;
   background-color: transparent;
@@ -78,21 +86,18 @@ function copyAnswer() {
   font-weight: 500;
   font-style: normal;
   font-variation-settings: "wdth" 100;
-  font-size: 0px;
+  font-size: 20px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: rgb(142, 142, 142);
-  transition: all 0.4s;
+  color: white;
+  background-color: grey;
   margin-right: 50px;
-  width: auto;
-}
+} */
 
-.inputs:focus {
-  width: auto;
-  font-size: 12px;
-  outline: none;
-  border: none;
-  color: transparent;
+.inputs {
+  opacity: 0;
+  height: 20px;
 }
 
 brack {
@@ -123,6 +128,15 @@ comm {
   color: rgb(83, 83, 83);
 
 }
+comm space {
+  width: 10px;
+  color: transparent;
+}
+
+space {
+  width: 10px;
+  color: transparent;
+}
 
 .answer {
   cursor: pointer;
@@ -139,7 +153,6 @@ comm {
 
 crs {
   background: none;
-  border-left: 1px solid white;
   width: 0;
   margin: 0;
   padding: 0;

@@ -1,0 +1,14 @@
+#featuresSection {
+    padding: 20px;
+}
+
+#featureWrap {
+    background: none;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+#featuresSection h1 {
+    text-align: center;
+}

@@ -16,14 +16,12 @@ export class Row {
     
         const prevAnswer = prevRow ? prevRow.getAnswer() : 0;
         this.equation = replaceSpecialCharacters(this.equation);
-        //this.answer = calculateAnswer(splitBrackets(replaceAns(this.equation, prevAnswer)));
-        this.answer = newCalculateAnswer(replaceAns(this.equation, prevAnswer));
+        this.answer = newCalculateAnswer(replaceAns(this.equation, prevAnswer), this.index);
 
         this.equation += " ";
+        console.log(`'${this.equation}'`);
         this.equation = this.equation.substring(0, this.equation.length - 1);
         this.dispEquation = displayEquation(this.equation, this.index);
-
-        // document.getElementById(`dispRow${this.index}`).innerHTML = displayEquation(this.equation);
     }
 
     setEquation(e) {
@@ -58,25 +56,32 @@ function colouredBrackets(e) {
 
 function displayEquation(e, index) {
     let commented = false;
-    if (e.substring(0,2) == "//") {
-        // return `<comm>${e.substring(2, e.length)}</comm>`;
+    
+    if (e.substring(0, 2) == "//") {
         commented = true;
     }
-    let offset = 0;
     if (rowManager) {
         let row = document.getElementById("row" + rowManager.getFocusRowIndex());
-        if (row){
+        if (row) {
             if (index == rowManager.getFocusRowIndex()) {
-                var pos = row.selectionStart;
-                if (e[pos + offset - 1] == " ") {
-                    e = e.substring(0, pos + offset) + "<crs class='lastSpace'/>" + e.substring(pos + offset, e.length);
-                } else {
-                    e = e.substring(0, pos + offset) + "<crs/>" + e.substring(pos + offset, e.length);
+                var start = row.selectionStart;
+                var end = row.selectionEnd;
+                if (start == end)
+                    e = e.substring(0, start) + "<crs></crs>" + e.substring(start, e.length);
+                else {
+                    let first = Math.min(...[start, end]);
+                    let second = Math.max(...[start, end]);
+                    e = e.substring(0, first) + "<crs></crs>" + e.substring(first, second) + "<crs></crs>" + e.substring(second, e.length);
                 }
             }
         }
     }
     e = convertToSuperscript(e);
+
+    e = e.replaceAll(" ", "<space>_</space>");
+    if (commented) {
+        return `<comm>${e}</comm>`;
+    }
 
     let operands = [
         ["+", "<op> + </op>"],
@@ -105,12 +110,7 @@ function displayEquation(e, index) {
 
     e = colouredBrackets(e);
 
-
-    if (commented) {
-        return `<comm>${e}</comm>`;
-    } else {
-        return e;
-    }
+    return e;
 }
 
 function convertToSuperscript(e) {

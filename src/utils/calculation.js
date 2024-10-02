@@ -22,7 +22,6 @@ const config = {
 // set up the library
 const math = create(all, config);
 
-console.log(math.evaluate("5e"));
 
 // used externally to replace pi with the symbol pi when the equation is displayed
 export function replaceSpecialCharacters(e) {
@@ -56,11 +55,19 @@ function surroundFunction(e) {
 }
 
 // used externally to return the answer to an equation in string form
-export function newCalculateAnswer(e) {
+export function newCalculateAnswer(e, index) {
+  if (index == 0) {
+    variables = new Map();
+  }
+
   // if a line is commented out using "//", then an answer should not be returned. This can be used by the user to annotate their calculations as they wish
   if (e.substring(0, 2) == "//") {
     return ""
   }
+  if (e.includes("=") && /\d/.test(e.split("=")[0])) {
+    return "Variable names can't contain numbers"
+  }
+
   if (e.includes("=")) {
     setVariable(e);
     return newCalculateAnswer(e.split("=")[1]);
@@ -70,7 +77,6 @@ export function newCalculateAnswer(e) {
 
   // remove all white space
   e = e.replaceAll(/\s/g, "");
-
 
   if (initialErrorChecks(e)[0]) {
     return initialErrorChecks(e)[1];
@@ -101,7 +107,6 @@ export function newCalculateAnswer(e) {
     ["ln(", "log("]
   ];
   re = replaceExpressions(re, replacements, false);
-  console.log(re);
 
   let definedFunctions = [
     "sin(",
@@ -291,7 +296,6 @@ function replaceVariables(equation, variables) {
   let sortedVariables = new Map(
     Array.from(variables).sort((a, b) => b[0].length - a[0].length)
   );
-
 
   for (let [key,value] of sortedVariables) {
     equation = equation.replaceAll(key, `(${value})`);
