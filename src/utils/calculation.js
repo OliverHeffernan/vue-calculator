@@ -115,7 +115,8 @@ export function newCalculateAnswer(e, index) {
     "tan(",
     "csc(",
     "sec(",
-    "i"
+    "i",
+    "abs("
   ];
 
   replacements.forEach((replacement) => {

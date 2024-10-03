@@ -97,7 +97,8 @@ function displayEquation(e, index) {
         ["sec(", "<func>sec</func>("],
         ["csc(", "<func>csc</func>("],
         ["cot(", "<func>cot</func>("],
-        ["pow(", "<func>pow</func>("]
+        ["pow(", "<func>pow</func>("],
+        ["abs(", "<func>abs</func>("]
     ];
 
     for (let i = 0; i < operands.length; i++) {
