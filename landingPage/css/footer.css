@@ -1,0 +1,17 @@
+#questionArea {
+    text-align: center;
+    padding: 100px;
+}
+
+#bottomLinks {
+    padding: 10px;
+}
+
+#bottomLinks a i {
+    font-size: 20px;
+    margin: 10px;
+}
+
+#bottomLinks #rightLinks {
+    float: right;
+}
