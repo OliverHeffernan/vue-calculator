@@ -1,5 +1,5 @@
 #landingSpread {
-    width: calc(100vw - 40px);
+    width: calc(100vw - 60px);
     background-color: #151d29;
     display: flex;
     margin: 20px;
@@ -21,7 +21,7 @@
 }
 
 #leftSide h1 {
-    font-size: 150px;
+    font-size: min(150px, 20vw);
     margin-bottom: 25px;
 }
 
