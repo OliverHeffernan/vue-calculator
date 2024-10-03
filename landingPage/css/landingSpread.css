@@ -7,11 +7,11 @@
     text-decoration: none;
 }
 
-#landingSpread #leftSide p {
+#landingSpread #leftSide #second {
     color: #DF6874;
 }
 
-#landingSpread:hover #leftSide p {
+#landingSpread:hover #leftSide #second {
     text-decoration: underline;
 }
 
@@ -21,8 +21,13 @@
 }
 
 #leftSide h1 {
+    margin-bottom: 5px;
     font-size: min(150px, 20vw);
+}
+#leftSide #first {
+    margin-top: max(-35px, -4.67vw);
     margin-bottom: 25px;
+    margin-left: 10px;
 }
 
 #rightSide  {
