@@ -1,0 +1,17 @@
+#margins {
+    justify-content: center;
+    width: min(800px, 90vw);
+    margin: 40px auto;
+}
+
+h3 {
+    margin-top: 15px;
+}
+
+h4 {
+    margin-top: 10px;
+}
+
+#margins h1, #margins h2, #margins h3, #margins h4, #margins h5, #margins h6 {
+    color: #DF6874;
+}

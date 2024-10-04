@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- main stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- navbar stylesheet -->
+    <link rel="stylesheet" href="css/navbar.css">
+
+    <!-- footer stylesheet -->
+    <link rel="stylesheet" href="css/footer.css">
+
+    <!-- help.html -->
+    <link rel="stylesheet" href="css/help.css">
+
+    <!-- fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    
+    <title>Calc - Help</title>
+</head>
+<body>
+    <imports>
+        imports/navbar.html,
+        imports/footer.html
+    </imports>
+    <blocks></blocks>
+    <navbar></navbar>
+    <div id="margins">
+        <h1>Calc</h1>
+        <h2>Features</h2>
+        <h3>Multiple-Calculations</h3>
+        In this app, you can have infinite lines of calculations, similar to a graphics calculator. To create a new line/calculation, press the enter key, and a new line will be added below the currently selected line.<br/>
+        <br/>
+        <h3>Copying Answers To Clipboard</h3>
+        To copy a result froma calculation to the clipboard, simply click the result, and it will be copied to the clipboard to be pasted later.<br/>
+        You can also type "ans" to reference the answer to the previous calculation.<br/>
+        <br/>
+        <h3>Variables</h3>
+        To create a variable, type what you want to call the variable, followed by an equals sign, followed by the value of the variable. You can then reference this variable in later calculations by typing the name of the variable.<br/>
+        <br/>
+        <h3>Powers</h3>
+        To use powers in your calculations, use the "^" symbol to write in super script. Then to end the power type ";", and the cursor will drop back down to the lower level. For example, if I wanted to calculate 5 squared, I would type "5^2;". This application also supports nested powers, for example, if I wanted to calculate 5 to the power of 5 squared, I would type "5^(5^2;);".<br/>
+        <br/>
+        <h3>Functions</h3>
+        Calc supports many functions, each of which is listed below.<br/>
+        - sin(angle)<br/>
+        - cos(angle)<br/>
+        - tan(angle)<br/>
+        - log() base 10<br/>
+        - ln()<br/>
+        - sec(angle)<br/>
+        - cosec(angle), csc(angle)<br/>
+        - cot(angle)<br/>
+        <br/>
+        <h3>Constants</h3>
+        Currently the only constant supported is pi. If you type in "pi", it automatically gets replaced with the symbol for pi. I plan to add euler's constant.<br/>
+        <br/>
+        <h3>Comments</h3>
+        If you want to add some descriptions to your calculations, start a new line with "//" and the app will not attempt to calculate that line, so you can write a description without worrying about errors.<br/>
+        <br/>
+        <h3>Settings</h3>
+        To open settings, click the cog icon in the top right corner, and a panel will slide out. To close the settings, click the cog again.<br/>
+        <h4>Angle Mode</h4>
+        The following angle units are supported:<br/>
+        - degrees<br/>
+        - radians<br/>
+        - gradians<br/>
+        To switch between them, open the settings. Click on the text that displays what unit is currently being used, and it will cycle between the units.<br/>
+        <br/>
+        <h4>Precision</h4>
+        To change the number of significant figures that results are rounded to, enter the number of significant figures into the input field in settings, corresponding to "Precision".
+    </div>
+    <footerElement></footerElement>
+</body>
+<script src="https://cdn.jsdelivr.net/gh/OliverHeffernan/block-js-library@latest/block.js"></script>
+</html>
