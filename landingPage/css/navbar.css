@@ -21,3 +21,8 @@ navbar ul li a {
 navbar ul li a:hover {
     background-color: rgb(47,47,60);
 }
+
+navbar ul .right {
+    margin-left: auto;
+    color: pink;
+}
