@@ -31,9 +31,7 @@ function handleEnter() {
 }
 
 function handleBackspace() {
-  if (rowManager.getRow(props.index).equation == "") {
-    rowManager.removeRowAt(props.index);
-  }
+  rowManager.removeRowAt(props.index);
 }
 
 function focusOnRow() {
@@ -65,6 +63,8 @@ function copyAnswer() {
         v-on:input="handleInput"
         @keyup.enter="handleEnter"
         @keyup.backspace="handleBackspace"
+        @keypress.backspace="handleBackspace"
+        @keydown.backspace="handleBackspace"
       />
     </td>
   </tr>
@@ -100,7 +100,7 @@ function copyAnswer() {
   height: 20px;
 }
 
-brack {
+brack, unexpected {
   color: red;
 }
 

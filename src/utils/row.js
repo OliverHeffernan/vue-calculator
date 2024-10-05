@@ -19,7 +19,6 @@ export class Row {
         this.answer = newCalculateAnswer(replaceAns(this.equation, prevAnswer), this.index);
 
         this.equation += " ";
-        console.log(`'${this.equation}'`);
         this.equation = this.equation.substring(0, this.equation.length - 1);
         this.dispEquation = displayEquation(this.equation, this.index);
     }
@@ -115,7 +114,28 @@ function displayEquation(e, index) {
 }
 
 function convertToSuperscript(e) {
-    e = e.replaceAll("^", "<sup>");
-    e = e.replaceAll(";", "</sup> ");
-    return e;
+    // e = e.replaceAll("^", "<sup>");
+    // e = e.replaceAll(";", "</sup> ");
+
+    let op = 0;
+    let cl = 0;
+    let q = "";
+    for (let i = 0; i < e.length; i++) {
+        if (e[i] == "^") {
+            op++;
+            q += "<sup>";
+        } else if (e[i] == ";") {
+            cl++;
+            if (cl > op) {
+                q += "<unexpected>;</unexpected>";
+                cl = op;
+            } else {
+                q += "</sup>";
+            }
+        } else {
+            q += e[i];
+        }
+    }
+
+    return q;
 }

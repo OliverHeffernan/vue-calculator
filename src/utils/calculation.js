@@ -135,6 +135,7 @@ export function newCalculateAnswer(e, index) {
 
   // evaluating brackets so that no errors are encountered. For example, previously if you had a power within a trig function, an error would occur
   // this function avoids this error.
+  console.log(re);
   while (re.includes("(")) {
     re = evaluateBrack(re);
   }
@@ -198,6 +199,18 @@ export function newCalculateAnswer(e, index) {
 function initialErrorChecks(e) {
   let supOp = e.replace(/[^^]/g, "").length;
   let supCl = e.replace(/[^;]/g, "").length;
+
+  let depth = 0;
+  for (let i = 0; i < e.length; i++) {
+    if (e[i] == "^") {
+      depth++;
+    } else if (e[i] == ";") {
+      depth--;
+      if (depth < 0) {
+        return [true, "unexpected power closing"];
+      }
+    }
+  }
 
   if (supOp > supCl) {
     return [true, "Syntax error, close powers using ;"]

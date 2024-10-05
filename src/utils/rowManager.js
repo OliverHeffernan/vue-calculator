@@ -5,30 +5,69 @@ let instance;
 
 class RowManager {
     constructor() {
+        // ensures that there is only one row manager, singleton
         if (instance) { throw new Error("RowManager is already initialized"); }
+
+        // sets up the rows array to be only a blank row, and makes sets the focusRowIndex to 0
         this.rows = ref([new Row("", 0)]);
         this.focusRowIndex = ref(0);
         instance = this;
     }
 
+    // returns an array of all the rows
     getRows() { return this.rows.value; }
+
+    // returns the row class based on the index
     getRow(index) { return this.rows.value[index]; }
+
+    // change the value of a row class
     setRow(index, value) { this.rows.value[index] = value; }
+
+    // add a new row based on current index.
     addRowAt(index) {
+        // gets the value of the current row
+        let currentRow = this.getRow(index).getEquation();
+
+        // gets the current row's input field
+        let htmlCurrentRow = document.getElementById(`row${index}`);
+
+        // gets the current selection within the input field
+        let start = htmlCurrentRow.selectionStart;
+        let end = htmlCurrentRow.selectionEnd;
+
+        // deletes whatever is selected, and puts whatever is after the selection into a different element in the array. These are the new values for the current row, and the new row.
+        let currentRowSplit = [currentRow.substring(0, start), currentRow.substring(end, currentRow.length)];
+
+        // sets the current row class to a new row, with the first part of the previous array as the equation, and inputs the index
+        this.setRow(index, new Row(currentRowSplit[0], index));
+
+        // sets the focus row index to the new row
         this.focusRowIndex.value = index + 1;
+
+        // resets the rows array
         let temp = this.rows.value;
         this.rows.value = null;
         setTimeout(() => {
             this.rows.value = temp;
-            this.rows.value.splice(index + 1, 0, new Row("", index+1));
+            this.rows.value.splice(index + 1, 0, new Row(currentRowSplit[1], index+1));
 
+            // makes sure the indexes are all correct
             for (let i = 0; i < this.rows.value.length; i++) {
                 this.rows.value[i].setIndex(i);
             }
         }, 1);
     }
     removeRowAt(index) {
-        if (this.rows.value.length != 1) {
+        let htmlRow = document.getElementById(`row${index}`);
+        let start = htmlRow.selectionStart;
+        let end = htmlRow.selectionEnd;
+        // if (this.rows.value.length != 1) {
+        if ((start == 0 || end == 0) && this.rows.value.length != 1) {
+            let equation = this.getRow(index).getEquation();
+            let remainingText = equation.substring(end, equation.length);
+            let newEquation = this.getRow(index - 1).getEquation() + remainingText;
+            let cursorPos = newEquation.length - remainingText.length;
+            this.setRow(index - 1, new Row(newEquation, index - 1));
             this.focusRowIndex.value = index != 0 ? index - 1 : 0;
             let temp = this.rows.value;
             this.rows.value = null;
@@ -39,17 +78,24 @@ class RowManager {
                 for (let i = 0; i < this.rows.value.length; i++) {
                     this.rows.value[i].setIndex(i);
                 }
-            });
+            }, 1);
+
+            setTimeout(() => {
+                document.getElementById(`row${this.focusRowIndex.value}`).setSelectionRange(cursorPos, cursorPos);
+                this.calculateAllRows();
+            }, 1);
         }
     }
     calculateAllRows() {
         setTimeout(() => {
-            this.rows.value.forEach(row => row.calculate());
+            if (this.rows.value) {
+                this.rows.value.forEach(row => row.calculate());
 
-            for (let i = 0; i < this.rows.value.length; i++) {
-                this.rows.value[i].calculate();
+                for (let i = 0; i < this.rows.value.length; i++) {
+                    this.rows.value[i].calculate();
+                }
             }
-        }, 0);
+        }, 1);
     }
     getFocusRowIndex() { return this.focusRowIndex.value; }
     setFocusRowIndex(index) { this.focusRowIndex.value = index; }
