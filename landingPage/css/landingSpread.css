@@ -1,8 +1,9 @@
 #landingSpread {
-    width: calc(100vw - 60px);
+    /* width: calc(100vw - 60px); */
     background-color: #151d29;
     display: flex;
-    margin: 20px;
+    /* margin: 20px; */
+    margin-top: 20px;
     border-radius: 20px;
     text-decoration: none;
 }
@@ -45,6 +46,7 @@
 
     #landingSpread #rightSide {
         width: calc(100% - 40px);
+        margin-left: 20px;
     }
 }
 

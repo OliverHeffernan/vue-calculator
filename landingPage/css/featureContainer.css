@@ -8,17 +8,35 @@
     box-sizing: border-box;
     flex: 1 1 200px;
 } */
+/* @media (min-width: 1101px) {
+    featureContainer {
+        width: 250px;
+        margin: 25px;
+    }
+}
+
+@media (max-width: 1100px) {
+    featureContainer {
+        width: calc(100vw - 40px);
+    }
+} */
 
 featureContainer {
     background-color: #151d29;
     padding: 15px;
     border-radius: 12px;
-    width: min(250px, calc(100% - 40px));
-    margin: 25px;
+    /* width: min(250px, calc(100% - 40px)); */
+    /* margin-top: 25px;
+    margin-bottom: 25px; */
     text-align: left;
     color: white;
     text-decoration: none;
     transition: all 0.4s;
+
+    flex: 1 1 calc(33.333% - 10px);
+    box-sizing: border-box;
+
+    min-width: 250px;
 }
 
 featureContainer h2 {
