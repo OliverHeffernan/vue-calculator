@@ -68,36 +68,27 @@ function copyAnswer() {
       />
     </td>
   </tr>
-  <tr>
-    <td @click="focusOnRow" :id="'dispRow' + props.index" v-html="rowManager.getRow(props.index).getDispEquation()"></td>
+  <tr class="calcRow">
+    <td @click="focusOnRow" class="dispRow" :id="'dispRow' + props.index" v-html="rowManager.getRow(props.index).getDispEquation()"></td>
     <td :id="'equal' + props.index" v-html="getEquals(props.index)"></td>
     <td @click="copyAnswer" class="answer">{{ rowManager.getRow(props.index).getAnswer() }}</td>
   </tr>
 </template>
 
 <style>
-/* .inputs {
-  width: 50vw;
-  width: 1ch;
-  border: none;
-  background-color: transparent;
-  font-family: "Inconsolata", monospace;
-  font-optical-sizing: auto;
-  font-weight: 500;
-  font-style: normal;
-  font-variation-settings: "wdth" 100;
-  font-size: 20px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: rgb(142, 142, 142);
-  color: white;
-  background-color: grey;
-  margin-right: 50px;
-} */
-
 .inputs {
   opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.calcRow {
   height: 20px;
+  vertical-align: top;
+}
+
+.dispRow {
+  min-width: 180px;
 }
 
 brack, unexpected {
@@ -141,6 +132,8 @@ space {
 .answer {
   cursor: pointer;
   transition: all 0.2s;
+  height: 20px;
+  overflow: scroll;
 }
 
 .answer:hover {

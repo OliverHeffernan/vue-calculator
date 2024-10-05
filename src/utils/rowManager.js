@@ -25,6 +25,9 @@ class RowManager {
 
     // add a new row based on current index.
     addRowAt(index) {
+        if (this.getRow(index).getEquation() == "") {
+            return;
+        }
         // gets the value of the current row
         let currentRow = this.getRow(index).getEquation();
 
@@ -55,6 +58,9 @@ class RowManager {
             for (let i = 0; i < this.rows.value.length; i++) {
                 this.rows.value[i].setIndex(i);
             }
+
+            // recalculates all rows
+            this.calculateAllRows();
         }, 1);
     }
     removeRowAt(index) {

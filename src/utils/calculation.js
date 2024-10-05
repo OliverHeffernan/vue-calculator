@@ -196,21 +196,16 @@ export function newCalculateAnswer(e, index) {
   }
 }
 
+// checks for any errors in calculation. Returns array [error?, message]
 function initialErrorChecks(e) {
+  // iterates through e, checking for unexpected semicolons
+  if (checkNegativeDepth(e, "^", ";")) {
+    return [true, "Unexpected power closing (;)."];
+  }
+
+  // double checks for any power errors that the previous check may have missed
   let supOp = e.replace(/[^^]/g, "").length;
   let supCl = e.replace(/[^;]/g, "").length;
-
-  let depth = 0;
-  for (let i = 0; i < e.length; i++) {
-    if (e[i] == "^") {
-      depth++;
-    } else if (e[i] == ";") {
-      depth--;
-      if (depth < 0) {
-        return [true, "unexpected power closing"];
-      }
-    }
-  }
 
   if (supOp > supCl) {
     return [true, "Syntax error, close powers using ;"]
@@ -243,6 +238,17 @@ function initialErrorChecks(e) {
     return [true, "Syntax error, can't begin with an operator, or closing bracket"]
   }
 
+  // checks for any unexpected closing brackets
+  if (checkNegativeDepth(e, "(", ")")) {
+    return [true, "Unexpected closing bracket (')')."];
+  }
+  if (checkNegativeDepth(e, "{", "}")) {
+    return [true, "Unexpected closing curly bracket ('}')."];
+  }
+  if (checkNegativeDepth(e, "[", "]")) {
+    return [true, "Unexpected closing square bracket (']')."];
+  }
+
   // makes sure that the number of closing brackets is the same as the number of opening brackets
   let numOfOpenings = e.replace(/[^(]/g, "").length;
   let numOfClosings = e.replace(/[^)]/g, "").length;
@@ -265,6 +271,21 @@ function initialErrorChecks(e) {
     return [true, "0"]
   }
   return [false]
+}
+
+function checkNegativeDepth(e, op, cl) {
+  let depth = 0;
+  for (let i = 0; i < e.length; i++) {
+    if (e[i] == op) {
+      depth++;
+    } else if (e[i] == cl) {
+      depth--;
+      if (depth < 0) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function replaceExpressions(e, replacements, replaceWithBlank) {
