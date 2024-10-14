@@ -133,7 +133,7 @@ space {
   cursor: pointer;
   transition: all 0.2s;
   height: 20px;
-  overflow: scroll;
+  /* overflow: scroll; */
 }
 
 .answer:hover {

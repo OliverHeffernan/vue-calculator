@@ -95,13 +95,26 @@ function displayEquation(e, index) {
         // get the input field of the row
         let row = document.getElementById("row" + rowManager.getFocusRowIndex());
         // check that row is not null, and that the row is focussed on
-        if (row && index === rowManager.getFocusRowIndex()) {
-            // get the start and end of the cursor selection in the input field
-            var start = row.selectionStart;
-            var end = row.selectionEnd;
+        // if (row && index === rowManager.getFocusRowIndex()) {
+        //     // get the start and end of the cursor selection in the input field
+        //     var start = row.selectionStart;
+        //     var end = row.selectionEnd;
 
-            // add crs tags to display the cursor
-            e = insertCursor(e, start, end);
+        //     // add crs tags to display the cursor
+        //     e = insertCursor(e, start, end);
+        // }
+        if (row) {
+            if (index == rowManager.getFocusRowIndex()) {
+                var start = row.selectionStart;
+                var end = row.selectionEnd;
+                if (start == end) {
+                    e = e.substring(0, start) + "<crs></crs>" + e.substring(start, e.length);
+                } else {
+                    let first = Math.min(...[start, end]);
+                    let second = Math.max(...[start, end]);
+                    e = e.substring(0, first) + "<crs></crs>" + e.substring(first, second) + "<crs></crs>" + e.substring(second, e.length);
+                }
+            }
         }
     }
 
@@ -185,13 +198,13 @@ function convertToSuperscript(e) {
     return q;
 }
 
-function insertCursor(e, start, end) {
-    if (start == end)
-        // if the cursor is not a selection, and just a cursor then add the crs tag to where the cursor is.
-        e = e.substring(0, start) + "<crs></crs>" + e.substring(start, e.length);
-    else {
-        // if it is a selection, then add crs tags at the start and end of the selection
-        e = e.substring(0, start) + "<crs></crs>" + e.substring(start, end) + "<crs></crs>" + e.substring(end, e.length);
-    }
-    return e
-}
+// function insertCursor(e, start, end) {
+//     if (start == end)
+//         // if the cursor is not a selection, and just a cursor then add the crs tag to where the cursor is.
+//         e = e.substring(0, start) + "<crs></crs>" + e.substring(start, e.length);
+//     else {
+//         // if it is a selection, then add crs tags at the start and end of the selection
+//         e = e.substring(0, start) + "<crs></crs>" + e.substring(start, end) + "<crs></crs>" + e.substring(end, e.length);
+//     }
+//     return e
+// }
