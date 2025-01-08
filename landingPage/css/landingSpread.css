@@ -33,7 +33,6 @@
 
 #rightSide  {
     width: 50%;
-    height: auto;
     margin: 20px;
     float: right;
     border-radius: 15px;
@@ -57,6 +56,6 @@
 
     #landingSpread #rightSide {
         width: 50%;
-        height: auto;
+		height: 300px;
     }
 }
